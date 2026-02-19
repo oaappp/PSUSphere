@@ -1,20 +1,20 @@
 # 🎓 PSUSphere  
 
 ## 📋 Description  
-PSUSphere is a web‑based student organization management system built using the **Django** framework. It is designed for **Palawan State University (PSU)** to streamline the management of student organizations, memberships, academic programs, and colleges. The system provides an intuitive **admin interface** that allows administrators to efficiently manage and monitor all student‑organization‑related data in one centralized platform.  
+PSUSphere is a web‑based student organization management system built using the **Django** framework. It is designed for **Palawan State University (PSU)** to streamline the management of student organizations, memberships, academic programs, and colleges. The system provides an intuitive **admin interface** that allows administrators to efficiently manage and monitor all student‑organization‑related data in one centralized platform.
 
 ---
 
 ## ✨ Features  
 
-- 🏫 **College Management** – Add, update, and manage colleges within the university  
-- 📚 **Program Management** – Track academic programs and their associated colleges  
-- 🏢 **Organization Management** – Create and manage student organizations with descriptions and college affiliations  
-- 👨‍🎓 **Student Management** – Register students with their personal information and academic program  
-- 🤝 **Membership Tracking** – Monitor which students belong to which organizations and when they joined  
-- 🔍 **Search & Filter** – Easily search and filter records through the Django Admin interface  
-- 🤖 **Automated Data Generation** – Uses the **Faker** library to generate realistic fake data for testing purposes  
-- 🔐 **Secure Admin Access** – Protected admin panel with superuser authentication  
+- 🏫 **College Management** – Add, update, and manage colleges within the university
+- 📚 **Program Management** – Track academic programs and their associated colleges
+- 🏢 **Organization Management** – Create and manage student organizations with descriptions and college affiliations
+- 👨‍🎓 **Student Management** – Register students with their personal information and academic program
+- 🤝 **Membership Tracking** – Monitor which students belong to which organizations and when they joined
+- 🔍 **Search & Filter** – Easily search and filter records through the Django Admin interface
+- 🤖 **Automated Data Generation** – Uses the **Faker** library to generate realistic fake data for testing purposes
+- 🔐 **Secure Admin Access** – Protected admin panel with superuser authentication
 
 ---
 
@@ -31,13 +31,13 @@ PSUSphere is a web‑based student organization management system built using th
 ## ⚙️ Installation & Setup  
 
 ### Prerequisites  
-- Python 3.x installed  
-- Git installed  
-- `virtualenv` installed  
+- Python 3.x installed
+- Git installed
+- `virtualenv` installed
 
 ### Steps  
 
-1.  **Clone the repository**  
+1.  **Clone the repository**
     ```bash
     git clone https://github.com/oaappp/PSUSphere.git
     ```
