@@ -1,8 +1,4 @@
-from django.views.generic import ListView
-from studentorg.models import Organization
+from django.views.generic import TemplateView
 
-class HomePageView(ListView):
-    model = Organization
+class HomePageView(TemplateView):
     template_name = "home.html"
-    context_object_name = "organizations"
-    paginate_by = 10
