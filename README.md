@@ -95,7 +95,13 @@ PSUSphere is a web‑based student organization management system built using th
     ```
     http://127.0.0.1:8000/admin/
     ```  
-    Log in with the superuser credentials you created in **Step 6**.  
+    Log in with the superuser credentials you created in **Step 6**.
+
+---
+
+## Screenshot - Home Page
+
+<img src="docs/images/psusphere-home.png" alt="PSUSphere Home Page" width="900">
 
 ---
 
