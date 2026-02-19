@@ -1,0 +1,168 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}PSUSphere{% endblock %}</title>
+    
+    <!-- CSS FILES -->
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'vendors/perfect-scrollbar/perfect-scrollbar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/app.css' %}">
+    <link rel="shortcut icon" href="{% static 'images/favicon.svg' %}" type="image/x-icon">
+
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <div id="app">
+        <!-- SIDEBAR -->
+        <div id="sidebar" class="active">
+            <div class="sidebar-wrapper active">
+                <div class="sidebar-header">
+                    <div class="d-flex justify-content-between">
+                        <div class="logo">
+                            <a href="{% url 'home' %}" style="text-decoration: none; font-weight: bold; color: #5a8dee; font-size: 1.5rem;">PSUSphere</a>
+                        </div>
+                        <div class="toggler">
+                            <a href="#" class="sidebar-hide d-xl-none d-block"><i class="bi bi-x bi-middle"></i></a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="sidebar-menu">
+                    <ul class="menu">
+                        <li class="sidebar-title">Main Menu</li>
+                        
+                        <!-- Dashboard -->
+                        <li class="sidebar-item active">
+                            <a href="{% url 'home' %}" class='sidebar-link'>
+                                <i data-feather="home" width="20"></i> 
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+
+                        <!-- Components Dropdown -->
+                        <li class="sidebar-item has-sub">
+                            <a href="#" class='sidebar-link'>
+                                <i data-feather="triangle" width="20"></i> 
+                                <span>Components</span>
+                            </a>
+                            <ul class="submenu">
+                                <li><a href="#">Alerts</a></li>
+                                <li><a href="#">Buttons</a></li>
+                                <li><a href="#">Cards</a></li>
+                            </ul>
+                        </li>
+
+                        <!-- Forms -->
+                        <li class="sidebar-item">
+                            <a href="#" class='sidebar-link'>
+                                <i data-feather="file-text" width="20"></i> 
+                                <span>Forms</span>
+                                <span class="badge bg-primary rounded-pill float-end" style="font-size: 0.7rem; margin-top: 3px;">50</span>
+                            </a>
+                        </li>
+
+                        <!-- Tables -->
+                        <li class="sidebar-item">
+                            <a href="#" class='sidebar-link'>
+                                <i data-feather="layers" width="20"></i> 
+                                <span>Tables</span>
+                            </a>
+                        </li>
+
+                        <!-- Notifications -->
+                        <li class="sidebar-item">
+                            <a href="#" class='sidebar-link'>
+                                <i data-feather="bell" width="20"></i> 
+                                <span>Notifications</span>
+                                <span class="badge bg-success rounded-pill float-end" style="font-size: 0.7rem; margin-top: 3px;">3</span>
+                            </a>
+                        </li>
+
+                        <!-- Typography -->
+                        <li class="sidebar-item">
+                            <a href="#" class='sidebar-link'>
+                                <i data-feather="type" width="20"></i> 
+                                <span>Typography</span>
+                                <span class="badge bg-danger rounded-pill float-end" style="font-size: 0.7rem; margin-top: 3px;">25</span>
+                            </a>
+                        </li>
+
+                        <!-- Icons -->
+                        <li class="sidebar-item">
+                            <a href="#" class='sidebar-link'>
+                                <i data-feather="box" width="20"></i> 
+                                <span>Icons</span>
+                            </a>
+                        </li>
+
+                    </ul>
+                </div>
+                <button class="sidebar-toggler btn x"><i data-feather="x"></i></button>
+            </div>
+        </div>
+
+        <!-- MAIN PANEL -->
+        <div id="main">
+            <!-- TOP NAVBAR -->
+            <nav class="navbar navbar-header navbar-expand navbar-light">
+                <a class="sidebar-toggler" href="#"><span class="navbar-toggler-icon"></span></a>
+                <button class="btn navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav d-flex align-items-center navbar-light ms-auto">
+                        <li class="dropdown">
+                            <a href="#" data-bs-toggle="dropdown" class="nav-link dropdown-toggle nav-link-lg nav-link-user">
+                                <div class="avatar me-1">
+                                    <img src="{% static 'images/avatar/avatar-s-1.png' %}" alt="">
+                                </div>
+                                <div class="d-none d-md-block d-lg-inline-block">Hi, Admin</div>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-end">
+                                <a class="dropdown-item" href="#"><i data-feather="user"></i> Account</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#"><i data-feather="log-out"></i> Logout</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+            
+            <!-- CONTENT AREA -->
+            <div class="main-content container-fluid">
+                {% block content %}
+                {% endblock %}
+            </div>
+
+            <!-- FOOTER -->
+            <footer>
+                <div class="footer clearfix mb-0 text-muted container-fluid">
+                    <div class="float-start">
+                        <p>2026 &copy; PSUSphere</p>
+                    </div>
+                    <div class="float-end">
+                        <p>Developed for PSUSphere</p>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT -->
+    <script src="{% static 'js/feather-icons/feather.min.js' %}"></script>
+    <script src="{% static 'vendors/perfect-scrollbar/perfect-scrollbar.min.js' %}"></script>
+    <script src="{% static 'js/app.js' %}"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+
+    <!-- Initialize Feather Icons -->
+    <script>
+        feather.replace()
+    </script>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
