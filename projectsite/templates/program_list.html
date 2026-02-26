@@ -6,16 +6,26 @@
 
 <section class="section">
   <div class="card">
+
     <div class="card-header">
       <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2">
         <h4 class="card-title mb-0">List of Programs</h4>
 
-        <div class="d-flex gap-2">
+        <div class="d-flex gap-2 flex-wrap">
+
+          <!-- SEARCH -->
           <form method="get" class="d-flex">
             <input type="text" name="q" value="{{ request.GET.q|default:'' }}"
                    class="form-control" placeholder="Search program...">
+
+            {# keep sort_by when searching #}
+            {% if request.GET.sort_by %}
+              <input type="hidden" name="sort_by" value="{{ request.GET.sort_by }}">
+            {% endif %}
+
             <button class="btn btn-primary ms-2" type="submit">Search</button>
-            {% if request.GET.q %}
+
+            {% if request.GET.q or request.GET.sort_by %}
               <a class="btn btn-light ms-2" href="{% url 'program-list' %}">Clear</a>
             {% endif %}
           </form>
@@ -23,6 +33,39 @@
           <a class="btn btn-success" href="{% url 'program-add' %}">Add Program</a>
         </div>
       </div>
+
+      <!-- SORT (Exercise 5) -->
+      <div class="mt-3">
+        <form method="get" class="row g-2 align-items-center">
+
+          {# keep q when sorting #}
+          {% if request.GET.q %}
+            <input type="hidden" name="q" value="{{ request.GET.q }}">
+          {% endif %}
+
+          <div class="col-auto">
+            <label class="col-form-label">Sort by</label>
+          </div>
+
+          <div class="col-auto">
+            <select class="form-control form-control-sm" name="sort_by">
+              <option value="prog_name"
+                {% if request.GET.sort_by == "prog_name" or not request.GET.sort_by %}selected{% endif %}>
+                Program Name
+              </option>
+              <option value="college__college_name"
+                {% if request.GET.sort_by == "college__college_name" %}selected{% endif %}>
+                College
+              </option>
+            </select>
+          </div>
+
+          <div class="col-auto">
+            <button type="submit" class="btn btn-primary btn-sm">Sort</button>
+          </div>
+        </form>
+      </div>
+
     </div>
 
     <div class="card-body">
@@ -34,6 +77,7 @@
             <th style="width:160px;">Action</th>
           </tr>
         </thead>
+
         <tbody>
           {% for p in programs %}
           <tr>
@@ -45,13 +89,16 @@
             </td>
           </tr>
           {% empty %}
-          <tr><td colspan="3" class="text-center">No Records Found</td></tr>
+          <tr>
+            <td colspan="3" class="text-center">No Records Found</td>
+          </tr>
           {% endfor %}
         </tbody>
       </table>
 
       {% include "includes/pagination.html" %}
     </div>
+
   </div>
 </section>
 {% endblock %}

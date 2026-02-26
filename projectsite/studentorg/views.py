@@ -1,5 +1,7 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django.urls import reverse_lazy
+from django.utils import timezone
 from django.views.generic import (
     TemplateView, ListView, CreateView, UpdateView, DeleteView
 )
@@ -8,16 +10,35 @@ from .models import Organization, Student, OrgMember, College, Program
 from .forms import OrganizationForm, StudentForm, OrgMemberForm, CollegeForm, ProgramForm
 
 
-class HomePageView(TemplateView):
+class HomePageView(LoginRequiredMixin, TemplateView):
     template_name = "home.html"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
 
-# ===================== ORGANIZATION CRUD + SEARCH =====================
-class OrganizationListView(ListView):
+        context["total_students"] = Student.objects.count()
+        context["total_organizations"] = Organization.objects.count()
+        context["total_programs"] = Program.objects.count()
+
+        today = timezone.now().date()
+        context["students_joined_this_year"] = (
+            OrgMember.objects.filter(date_joined__year=today.year)
+            .values("student")
+            .distinct()
+            .count()
+        )
+        return context
+
+
+# ===================== ORGANIZATION CRUD + SEARCH + SORT =====================
+class OrganizationListView(LoginRequiredMixin, ListView):
     model = Organization
     template_name = "org_list.html"
     context_object_name = "organizations"
     paginate_by = 10
+
+    # SORTING (Exercise 5 - static)
+    ordering = ["college__college_name", "name"]
 
     def get_queryset(self):
         qs = super().get_queryset().select_related("college")
@@ -31,28 +52,28 @@ class OrganizationListView(ListView):
         return qs
 
 
-class OrganizationCreateView(CreateView):
+class OrganizationCreateView(LoginRequiredMixin, CreateView):
     model = Organization
     form_class = OrganizationForm
     template_name = "org_form.html"
     success_url = reverse_lazy("organization-list")
 
 
-class OrganizationUpdateView(UpdateView):
+class OrganizationUpdateView(LoginRequiredMixin, UpdateView):
     model = Organization
     form_class = OrganizationForm
     template_name = "org_form.html"
     success_url = reverse_lazy("organization-list")
 
 
-class OrganizationDeleteView(DeleteView):
+class OrganizationDeleteView(LoginRequiredMixin, DeleteView):
     model = Organization
     template_name = "org_del.html"
     success_url = reverse_lazy("organization-list")
 
 
 # ===================== STUDENT CRUD + SEARCH =====================
-class StudentListView(ListView):
+class StudentListView(LoginRequiredMixin, ListView):
     model = Student
     template_name = "student_list.html"
     context_object_name = "students"
@@ -73,32 +94,35 @@ class StudentListView(ListView):
         return qs
 
 
-class StudentCreateView(CreateView):
+class StudentCreateView(LoginRequiredMixin, CreateView):
     model = Student
     form_class = StudentForm
     template_name = "student_form.html"
     success_url = reverse_lazy("student-list")
 
 
-class StudentUpdateView(UpdateView):
+class StudentUpdateView(LoginRequiredMixin, UpdateView):
     model = Student
     form_class = StudentForm
     template_name = "student_form.html"
     success_url = reverse_lazy("student-list")
 
 
-class StudentDeleteView(DeleteView):
+class StudentDeleteView(LoginRequiredMixin, DeleteView):
     model = Student
     template_name = "student_del.html"
     success_url = reverse_lazy("student-list")
 
 
-# ===================== ORGMEMBER CRUD + SEARCH =====================
-class OrgMemberListView(ListView):
+# ===================== ORGMEMBER CRUD + SEARCH + SORT =====================
+class OrgMemberListView(LoginRequiredMixin, ListView):
     model = OrgMember
     template_name = "member_list.html"
     context_object_name = "members"
     paginate_by = 10
+
+    # SORTING (Exercise 5)
+    ordering = ["student__lastname", "student__firstname", "-date_joined"]
 
     def get_queryset(self):
         qs = super().get_queryset().select_related(
@@ -115,28 +139,28 @@ class OrgMemberListView(ListView):
         return qs
 
 
-class OrgMemberCreateView(CreateView):
+class OrgMemberCreateView(LoginRequiredMixin, CreateView):
     model = OrgMember
     form_class = OrgMemberForm
     template_name = "member_form.html"
     success_url = reverse_lazy("member-list")
 
 
-class OrgMemberUpdateView(UpdateView):
+class OrgMemberUpdateView(LoginRequiredMixin, UpdateView):
     model = OrgMember
     form_class = OrgMemberForm
     template_name = "member_form.html"
     success_url = reverse_lazy("member-list")
 
 
-class OrgMemberDeleteView(DeleteView):
+class OrgMemberDeleteView(LoginRequiredMixin, DeleteView):
     model = OrgMember
     template_name = "member_del.html"
     success_url = reverse_lazy("member-list")
 
 
 # ===================== COLLEGE CRUD + SEARCH =====================
-class CollegeListView(ListView):
+class CollegeListView(LoginRequiredMixin, ListView):
     model = College
     template_name = "college_list.html"
     context_object_name = "colleges"
@@ -150,32 +174,40 @@ class CollegeListView(ListView):
         return qs
 
 
-class CollegeCreateView(CreateView):
+class CollegeCreateView(LoginRequiredMixin, CreateView):
     model = College
     form_class = CollegeForm
     template_name = "college_form.html"
     success_url = reverse_lazy("college-list")
 
 
-class CollegeUpdateView(UpdateView):
+class CollegeUpdateView(LoginRequiredMixin, UpdateView):
     model = College
     form_class = CollegeForm
     template_name = "college_form.html"
     success_url = reverse_lazy("college-list")
 
 
-class CollegeDeleteView(DeleteView):
+class CollegeDeleteView(LoginRequiredMixin, DeleteView):
     model = College
     template_name = "college_del.html"
     success_url = reverse_lazy("college-list")
 
 
-# ===================== PROGRAM CRUD + SEARCH =====================
-class ProgramListView(ListView):
+# ===================== PROGRAM CRUD + SEARCH + DYNAMIC SORT =====================
+class ProgramListView(LoginRequiredMixin, ListView):
     model = Program
     template_name = "program_list.html"
     context_object_name = "programs"
     paginate_by = 10
+
+    # SORTING (Exercise 5 - dynamic)
+    def get_ordering(self):
+        allowed = ["prog_name", "college__college_name"]
+        sort_by = self.request.GET.get("sort_by")
+        if sort_by in allowed:
+            return sort_by
+        return "prog_name"
 
     def get_queryset(self):
         qs = super().get_queryset().select_related("college")
@@ -188,21 +220,21 @@ class ProgramListView(ListView):
         return qs
 
 
-class ProgramCreateView(CreateView):
+class ProgramCreateView(LoginRequiredMixin, CreateView):
     model = Program
     form_class = ProgramForm
     template_name = "program_form.html"
     success_url = reverse_lazy("program-list")
 
 
-class ProgramUpdateView(UpdateView):
+class ProgramUpdateView(LoginRequiredMixin, UpdateView):
     model = Program
     form_class = ProgramForm
     template_name = "program_form.html"
     success_url = reverse_lazy("program-list")
 
 
-class ProgramDeleteView(DeleteView):
+class ProgramDeleteView(LoginRequiredMixin, DeleteView):
     model = Program
     template_name = "program_del.html"
     success_url = reverse_lazy("program-list")

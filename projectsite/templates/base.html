@@ -22,7 +22,7 @@
     <div id="sidebar" class="active">
         <div class="sidebar-wrapper active">
             <div class="sidebar-header">
-                <div class="d-flex justify-content-between">
+                <div class="d-flex justify-content-between align-items-center">
                     <div class="logo">
                         <a href="{% url 'home' %}" style="text-decoration:none;font-weight:bold;color:#5a8dee;font-size:1.5rem;">
                             PSUSphere
@@ -30,7 +30,7 @@
                     </div>
                     <div class="toggler">
                         <a href="#" class="sidebar-hide d-xl-none d-block">
-                            <span style="font-weight:bold;">X</span>
+                            <i data-feather="x"></i>
                         </a>
                     </div>
                 </div>
@@ -84,17 +84,41 @@
                         </a>
                     </li>
 
+                    <li class="sidebar-title">Account</li>
+
+                    {% if user.is_authenticated %}
+                    <li class="sidebar-item">
+                        <form method="post" action="{% url 'logout' %}" style="margin:0;">
+                            {% csrf_token %}
+                            <button type="submit" class="sidebar-link"
+                                    style="background:none;border:0;width:100%;text-align:left;padding: .7rem 1rem;">
+                                <i data-feather="log-out" width="20"></i>
+                                <span>Logout</span>
+                            </button>
+                        </form>
+                    </li>
+                    {% else %}
+                    <li class="sidebar-item">
+                        <a href="{% url 'login' %}" class="sidebar-link">
+                            <i data-feather="log-in" width="20"></i>
+                            <span>Login</span>
+                        </a>
+                    </li>
+                    {% endif %}
+
                 </ul>
             </div>
 
-            <button class="sidebar-toggler btn x"><i data-feather="x"></i></button>
+            <button class="sidebar-toggler btn x">
+                <i data-feather="x"></i>
+            </button>
         </div>
     </div>
 
     <!-- MAIN -->
     <div id="main">
 
-        <!-- TOP NAV -->
+        <!-- TOP NAVBAR -->
         <nav class="navbar navbar-header navbar-expand navbar-light">
             <a class="sidebar-toggler" href="#"><span class="navbar-toggler-icon"></span></a>
 
@@ -105,12 +129,33 @@
                             <div class="avatar me-1">
                                 <img src="{% static 'images/avatar/avatar-s-1.png' %}" alt="user-img" width="36" class="rounded-circle">
                             </div>
-                            <div class="d-none d-md-block d-lg-inline-block">Hi, Admin</div>
+                            <div class="d-none d-md-block d-lg-inline-block">
+                                {% if user.is_authenticated %}
+                                    Hi, {{ user.username }}
+                                {% else %}
+                                    Hi, Guest
+                                {% endif %}
+                            </div>
                         </a>
+
                         <div class="dropdown-menu dropdown-menu-end">
-                            <a class="dropdown-item" href="#"><i data-feather="user"></i> Account</a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="#"><i data-feather="log-out"></i> Logout</a>
+                            {% if user.is_authenticated %}
+                                <a class="dropdown-item" href="/admin/">
+                                    <i data-feather="settings"></i> Admin
+                                </a>
+                                <div class="dropdown-divider"></div>
+
+                                <form method="post" action="{% url 'logout' %}" style="margin:0;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="dropdown-item">
+                                        <i data-feather="log-out"></i> Logout
+                                    </button>
+                                </form>
+                            {% else %}
+                                <a class="dropdown-item" href="{% url 'login' %}">
+                                    <i data-feather="log-in"></i> Login
+                                </a>
+                            {% endif %}
                         </div>
                     </li>
                 </ul>
@@ -138,7 +183,6 @@
 </div>
 
 <!-- JS -->
-{# If feather.min.js is not found, change to: {% static 'js/feather-icons.js' %} #}
 <script src="{% static 'js/feather-icons/feather.min.js' %}"></script>
 <script src="{% static 'vendors/perfect-scrollbar/perfect-scrollbar.min.js' %}"></script>
 <script src="{% static 'js/app.js' %}"></script>

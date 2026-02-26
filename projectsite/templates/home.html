@@ -1,16 +1,51 @@
 {% extends "base.html" %}
-{% block title %}Home | PSUSphere{% endblock %}
+{% block title %}Dashboard | PSUSphere{% endblock %}
 
 {% block content %}
 <div class="page-title">
-    <h3>Home</h3>
+  <h3>Dashboard</h3>
+  <p class="text-subtitle text-muted">Overview</p>
 </div>
 
 <section class="section">
-    <div class="card">
+  <div class="row">
+
+    <div class="col-12 col-md-3">
+      <div class="card">
         <div class="card-body">
-            Hello, World
+          <p class="mb-1">Students</p>
+          <h4 class="mb-0">{{ total_students }}</h4>
         </div>
+      </div>
     </div>
+
+    <div class="col-12 col-md-3">
+      <div class="card">
+        <div class="card-body">
+          <p class="mb-1">Joined This Year</p>
+          <h4 class="mb-0">{{ students_joined_this_year }}</h4>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-md-3">
+      <div class="card">
+        <div class="card-body">
+          <p class="mb-1">Organizations</p>
+          <h4 class="mb-0">{{ total_organizations }}</h4>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-md-3">
+      <div class="card">
+        <div class="card-body">
+          <p class="mb-1">Programs</p>
+          <h4 class="mb-0">{{ total_programs }}</h4>
+        </div>
+      </div>
+    </div>
+
+  </div>
 </section>
 {% endblock %}
