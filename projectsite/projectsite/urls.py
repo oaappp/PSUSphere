@@ -5,8 +5,8 @@ from studentorg.views import HomePageView
 urlpatterns = [
     path("admin/", admin.site.urls),
 
-    # Login/Logout URLs (Django built-in)
-    path("accounts/", include("django.contrib.auth.urls")),
+    # MUST be allauth (not django.contrib.auth.urls)
+    path("accounts/", include("allauth.urls")),
 
     path("", HomePageView.as_view(), name="home"),
     path("", include("studentorg.urls")),

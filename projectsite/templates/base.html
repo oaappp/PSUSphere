@@ -88,7 +88,7 @@
 
                     {% if user.is_authenticated %}
                     <li class="sidebar-item">
-                        <form method="post" action="{% url 'logout' %}" style="margin:0;">
+                        <form method="post" action="{% url 'account_logout' %}" style="margin:0;">
                             {% csrf_token %}
                             <button type="submit" class="sidebar-link"
                                     style="background:none;border:0;width:100%;text-align:left;padding: .7rem 1rem;">
@@ -99,7 +99,7 @@
                     </li>
                     {% else %}
                     <li class="sidebar-item">
-                        <a href="{% url 'login' %}" class="sidebar-link">
+                        <a href="{% url 'account_login' %}" class="sidebar-link">
                             <i data-feather="log-in" width="20"></i>
                             <span>Login</span>
                         </a>
@@ -145,14 +145,14 @@
                                 </a>
                                 <div class="dropdown-divider"></div>
 
-                                <form method="post" action="{% url 'logout' %}" style="margin:0;">
+                                <form method="post" action="{% url 'account_logout' %}" style="margin:0;">
                                     {% csrf_token %}
                                     <button type="submit" class="dropdown-item">
                                         <i data-feather="log-out"></i> Logout
                                     </button>
                                 </form>
                             {% else %}
-                                <a class="dropdown-item" href="{% url 'login' %}">
+                                <a class="dropdown-item" href="{% url 'account_login' %}">
                                     <i data-feather="log-in"></i> Login
                                 </a>
                             {% endif %}
