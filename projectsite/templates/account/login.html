@@ -1,145 +1,190 @@
+{% load socialaccount %}
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
- <head>
- <meta charset="utf-8" />
- <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
- <title>PSUSphere Login</title>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <title>PSUSphere Login</title>
 
- <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}" />
- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.2/mdb.min.css" />
+  <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.2/mdb.min.css" />
 
- <style>
- body {
- display: flex;
- align-items: center;
- justify-content: center;
- height: 100vh;
- background-color: #f8f9fc;
- }
- .auth-card {
- max-width: 600px;
- width: 100%;
- background: #fff;
- border-radius: 12px;
- box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
- padding: 2rem;
- }
- </style>
- </head>
+  <style>
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      background-color: #f8f9fc;
+    }
+    .auth-card {
+      max-width: 600px;
+      width: 100%;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      padding: 2rem;
+    }
+  </style>
+</head>
 
- <body>
- <div class="auth-card">
- <!-- Pills navs -->
- <ul class="nav nav-pills nav-justified mb-3" id="ex1" role="tablist">
- <li class="nav-item" role="presentation">
- <a class="nav-link active" id="tab-login" data-mdb-pill-init href="#pills-login" role="tab" aria-selected="true">Login</a>
- </li>
- <li class="nav-item" role="presentation">
- <a class="nav-link" id="tab-register" data-mdb-pill-init href="#pills-register" role="tab" aria-selected="false">Register</a>
- </li>
- </ul>
+<body>
+<div class="auth-card">
 
- <div class="tab-content">
+  <!-- Pills navs -->
+  <ul class="nav nav-pills nav-justified mb-3" id="ex1" role="tablist">
+    <li class="nav-item" role="presentation">
+      <a class="nav-link active" id="tab-login" data-mdb-pill-init href="#pills-login"
+         role="tab" aria-controls="pills-login" aria-selected="true">Login</a>
+    </li>
+    <li class="nav-item" role="presentation">
+      <a class="nav-link" id="tab-register" href="{% url 'account_signup' %}">Register</a>
+    </li>
+  </ul>
 
- <!-- Login tab -->
- <div class="tab-pane fade show active" id="pills-login" role="tabpanel" aria-labelledby="tab-login">
- <form method="post" action="{% url 'account_login' %}">
- {% csrf_token %}
+  <!-- Pills content -->
+  <div class="tab-content">
 
- <div class="text-center mb-3">
- <p>Sign in with:</p>
- <!-- Social buttons DISABLED for now, add back when you setup Google -->
- <a href="#" class="btn btn-link btn-floating mx-1 disabled">
- <i class="fab fa-google"></i>
- </a>
- <a href="#" class="btn btn-link btn-floating mx-1 disabled">
- <i class="fab fa-github"></i>
- </a>
- </div>
+    <!-- LOGIN TAB -->
+    <div class="tab-pane fade show active" id="pills-login" role="tabpanel" aria-labelledby="tab-login">
+      <form method="post" action="{% url 'account_login' %}">
+        {% csrf_token %}
 
- <p class="text-center">or:</p>
+        {# preserve ?next=/ behavior #}
+        {% if redirect_field_value %}
+          <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}">
+        {% endif %}
 
- <div data-mdb-input-init class="form-outline mb-4">
- <input type="text" name="login" id="id_login" class="form-control" required />
- <label class="form-label" for="id_login">Email or Username</label>
- </div>
+        {# Show social buttons ONLY if configured #}
+        {% get_providers as socialaccount_providers %}
+        {% if socialaccount_providers %}
+          <div class="text-center mb-3">
+            <p>Sign in with:</p>
 
- <div data-mdb-input-init class="form-outline mb-4">
- <input type="password" name="password" id="id_password" class="form-control" required />
- <label class="form-label" for="id_password">Password</label>
- </div>
+            {% for provider in socialaccount_providers %}
+              {% if provider.id == "google" %}
+                <a href="{% provider_login_url provider.id %}" class="btn btn-link btn-floating mx-1" title="Google">
+                  <i class="fab fa-google"></i>
+                </a>
+              {% elif provider.id == "github" %}
+                <a href="{% provider_login_url provider.id %}" class="btn btn-link btn-floating mx-1" title="GitHub">
+                  <i class="fab fa-github"></i>
+                </a>
+              {% endif %}
+            {% endfor %}
+          </div>
+          <p class="text-center">or:</p>
+        {% endif %}
 
- <div class="row mb-4">
- <div class="col-md-6 d-flex justify-content-center">
- <div class="form-check mb-3 mb-md-0">
- <input class="form-check-input" type="checkbox" id="loginCheck" checked />
- <label class="form-check-label" for="loginCheck"> Remember me </label>
- </div>
- </div>
+        <!-- Login (username/email) -->
+        <div data-mdb-input-init class="form-outline mb-4">
+          <input type="text" name="login" id="id_login" class="form-control" required />
+          <label class="form-label" for="id_login">Email or Username</label>
+        </div>
 
- <div class="col-md-6 d-flex justify-content-center">
- <a href="{% url 'account_reset_password' %}">Forgot password?</a>
- </div>
- </div>
+        <!-- Password -->
+        <div data-mdb-input-init class="form-outline mb-4">
+          <input type="password" name="password" id="id_password" class="form-control" required />
+          <label class="form-label" for="id_password">Password</label>
+        </div>
 
- {% if form.non_field_errors %}
- <div class="alert alert-danger" role="alert">
- {% for error in form.non_field_errors %}
- <p{% if forloop.last %} class="mb-0"{% endif %}>{{ error }}</p>
- {% endfor %}
- </div>
- {% endif %}
+        <!-- Remember me / Forgot -->
+        <div class="row mb-4">
+          <div class="col-md-6 d-flex justify-content-center">
+            <div class="form-check mb-3 mb-md-0">
+              <input class="form-check-input" type="checkbox" name="remember" id="loginCheck" />
+              <label class="form-check-label" for="loginCheck"> Remember me </label>
+            </div>
+          </div>
+          <div class="col-md-6 d-flex justify-content-center">
+            <a href="{% url 'account_reset_password' %}">Forgot password?</a>
+          </div>
+        </div>
 
- <button type="submit" class="btn btn-primary btn-block mb-4">Sign in</button>
- </form>
- </div>
+        {% if form.non_field_errors %}
+          <div class="alert alert-danger" role="alert">
+            {% for error in form.non_field_errors %}
+              <p{% if forloop.last %} class="mb-0"{% endif %}>{{ error }}</p>
+            {% endfor %}
+          </div>
+        {% endif %}
 
- <!-- Register tab -->
- <div class="tab-pane fade" id="pills-register" role="tabpanel" aria-labelledby="tab-register">
- <form method="post" action="{% url 'account_signup' %}">
- {% csrf_token %}
+        <button type="submit" class="btn btn-primary btn-block mb-4">Sign in</button>
+      </form>
+    </div>
 
- <div class="text-center mb-3">
- <p>Sign up with:</p>
- <a href="#" class="btn btn-link btn-floating mx-1 disabled">
- <i class="fab fa-google"></i>
- </a>
- <a href="#" class="btn btn-link btn-floating mx-1 disabled">
- <i class="fab fa-github"></i>
- </a>
- </div>
+    <!-- REGISTER TAB -->
+    <div class="tab-pane fade" id="pills-register" role="tabpanel" aria-labelledby="tab-register">
+      <form method="post" action="{% url 'account_signup' %}">
+        {% csrf_token %}
 
- <p class="text-center">or:</p>
+        {# preserve ?next=/ behavior #}
+        {% if redirect_field_value %}
+          <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}">
+        {% endif %}
 
- <div data-mdb-input-init class="form-outline mb-4">
- <input type="text" name="username" id="registerUsername" class="form-control" required />
- <label class="form-label" for="registerUsername">Username</label>
- </div>
+        {# Show social buttons ONLY if configured #}
+        {% get_providers as socialaccount_providers %}
+        {% if socialaccount_providers %}
+          <div class="text-center mb-3">
+            <p>Sign up with:</p>
 
- <div data-mdb-input-init class="form-outline mb-4">
- <input type="email" name="email" id="registerEmail" class="form-control" required />
- <label class="form-label" for="registerEmail">Email</label>
- </div>
+            {% for provider in socialaccount_providers %}
+              {% if provider.id == "google" %}
+                <a href="{% provider_login_url provider.id %}" class="btn btn-link btn-floating mx-1" title="Google">
+                  <i class="fab fa-google"></i>
+                </a>
+              {% elif provider.id == "github" %}
+                <a href="{% provider_login_url provider.id %}" class="btn btn-link btn-floating mx-1" title="GitHub">
+                  <i class="fab fa-github"></i>
+                </a>
+              {% endif %}
+            {% endfor %}
+          </div>
+          <p class="text-center">or:</p>
+        {% endif %}
 
- <div data-mdb-input-init class="form-outline mb-4">
- <input type="password" name="password1" id="registerPassword" class="form-control" required />
- <label class="form-label" for="registerPassword">Password</label>
- </div>
+        <!-- Username -->
+        <div data-mdb-input-init class="form-outline mb-4">
+          <input type="text" name="username" id="registerUsername" class="form-control" required />
+          <label class="form-label" for="registerUsername">Username</label>
+        </div>
 
- <div data-mdb-input-init class="form-outline mb-4">
- <input type="password" name="password2" id="registerRepeatPassword" class="form-control" required />
- <label class="form-label" for="registerRepeatPassword">Repeat password</label>
- </div>
+        <!-- Email -->
+        <div data-mdb-input-init class="form-outline mb-4">
+          <input type="email" name="email" id="registerEmail" class="form-control" required />
+          <label class="form-label" for="registerEmail">Email</label>
+        </div>
 
- <button type="submit" class="btn btn-primary btn-block mb-3">Register</button>
- </form>
- </div>
+        <!-- Password -->
+        <div data-mdb-input-init class="form-outline mb-4">
+          <input type="password" name="password1" id="registerPassword" class="form-control" required />
+          <label class="form-label" for="registerPassword">Password</label>
+        </div>
 
- </div>
- </div>
+        <!-- Confirm Password -->
+        <div data-mdb-input-init class="form-outline mb-4">
+          <input type="password" name="password2" id="registerRepeatPassword" class="form-control" required />
+          <label class="form-label" for="registerRepeatPassword">Repeat password</label>
+        </div>
 
- <script src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.2/mdb.min.js"></script>
- </body>
+        {% if form.non_field_errors %}
+          <div class="alert alert-danger" role="alert">
+            {% for error in form.non_field_errors %}
+              <p{% if forloop.last %} class="mb-0"{% endif %}>{{ error }}</p>
+            {% endfor %}
+          </div>
+        {% endif %}
+
+        <button type="submit" class="btn btn-primary btn-block mb-3">Register</button>
+      </form>
+    </div>
+
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.2/mdb.min.js"></script>
+</body>
 </html>
