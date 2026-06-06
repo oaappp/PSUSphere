@@ -132,6 +132,9 @@
                             <div class="d-none d-md-block d-lg-inline-block">
                                 {% if user.is_authenticated %}
                                     Hi, {{ user.username }}
+                                    {% if user.is_staff %}
+                                        <span class="user-level" style="display:block;font-size:0.75rem;color:#5a8dee;">Administrator</span>
+                                    {% endif %}
                                 {% else %}
                                     Hi, Guest
                                 {% endif %}

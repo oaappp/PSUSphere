@@ -7,184 +7,544 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
   <title>PSUSphere Login</title>
 
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.2/mdb.min.css" />
+  <link rel="shortcut icon" href="{% static 'images/favicon.png' %}" type="image/png">
 
   <style>
+    * { font-family: 'Raleway', sans-serif; }
+
     body {
       display: flex;
       align-items: center;
       justify-content: center;
-      height: 100vh;
-      background-color: #f8f9fc;
+      min-height: 100vh;
+      margin: 0;
+      background: linear-gradient(135deg, #f7faff 0%, #e8f0fe 100%);
+      padding: 1rem;
     }
-    .auth-card {
-      max-width: 600px;
+
+    .auth-wrapper {
+      display: flex;
+      max-width: 900px;
       width: 100%;
+      min-height: 560px;
       background: #fff;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      padding: 2rem;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(90, 141, 238, 0.15), 0 8px 20px rgba(0, 0, 0, 0.06);
+      overflow: hidden;
+      animation: fadeIn 0.5s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ---- LEFT BRAND PANEL ---- */
+    .auth-brand {
+      flex: 0 0 340px;
+      background: linear-gradient(145deg, #5a8dee 0%, #3d6ed9 100%);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 2.5rem 2rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .auth-brand::before {
+      content: '';
+      position: absolute;
+      top: -60px;
+      right: -60px;
+      width: 200px;
+      height: 200px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 50%;
+    }
+
+    .auth-brand::after {
+      content: '';
+      position: absolute;
+      bottom: -80px;
+      left: -40px;
+      width: 260px;
+      height: 260px;
+      background: rgba(255,255,255,0.04);
+      border-radius: 50%;
+    }
+
+    .auth-brand .brand-icon {
+      font-size: 3.2rem;
+      margin-bottom: 0.5rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .auth-brand h2 {
+      font-weight: 800;
+      font-size: 1.8rem;
+      margin-bottom: 0.5rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .auth-brand p {
+      font-weight: 300;
+      font-size: 0.9rem;
+      opacity: 0.85;
+      margin-bottom: 0;
+      position: relative;
+      z-index: 1;
+      line-height: 1.6;
+    }
+
+    .auth-brand .brand-decoration {
+      margin-top: 2rem;
+      width: 50px;
+      height: 3px;
+      background: rgba(255,255,255,0.4);
+      border-radius: 2px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ---- RIGHT FORM PANEL ---- */
+    .auth-form {
+      flex: 1;
+      padding: 2.5rem 3rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .auth-form .form-header {
+      margin-bottom: 1.8rem;
+    }
+
+    .auth-form .form-header h3 {
+      font-weight: 700;
+      color: #2c3e50;
+      font-size: 1.5rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .auth-form .form-header p {
+      color: #7f8c9b;
+      font-size: 0.9rem;
+      margin-bottom: 0;
+    }
+
+    /* Tabs */
+    .auth-tabs {
+      display: flex;
+      gap: 0;
+      margin-bottom: 1.8rem;
+      background: #f0f4f9;
+      border-radius: 10px;
+      padding: 4px;
+    }
+
+    .auth-tabs .tab-btn {
+      flex: 1;
+      text-align: center;
+      padding: 0.6rem 1rem;
+      border: none;
+      background: transparent;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: #7f8c9b;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+
+    .auth-tabs .tab-btn.active {
+      background: #fff;
+      color: #5a8dee;
+      box-shadow: 0 2px 8px rgba(90, 141, 238, 0.15);
+    }
+
+    .auth-tabs .tab-btn:hover:not(.active) {
+      color: #5a8dee;
+    }
+
+    /* Social buttons */
+    .social-row {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: center;
+      margin-bottom: 1.2rem;
+    }
+
+    .social-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.55rem 1.2rem;
+      border-radius: 10px;
+      border: 1.5px solid #e2e8f0;
+      background: #fff;
+      color: #475569;
+      font-weight: 500;
+      font-size: 0.85rem;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      flex: 1;
+    }
+
+    .social-btn:hover {
+      border-color: #5a8dee;
+      background: #f8faff;
+      color: #5a8dee;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(90, 141, 238, 0.12);
+    }
+
+    .social-btn i { font-size: 1.1rem; }
+
+    .divider-text {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.2rem;
+      color: #94a3b8;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+
+    .divider-text::before,
+    .divider-text::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #e2e8f0;
+    }
+
+    /* Form fields */
+    .form-floating-custom {
+      position: relative;
+      margin-bottom: 1rem;
+    }
+
+    .form-floating-custom input {
+      width: 100%;
+      padding: 0.75rem 1rem 0.75rem 2.6rem;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #2c3e50;
+      background: #fafcff;
+      transition: all 0.2s ease;
+      outline: none;
+      box-sizing: border-box;
+    }
+
+    .form-floating-custom input:focus {
+      border-color: #5a8dee;
+      background: #fff;
+      box-shadow: 0 0 0 3px rgba(90, 141, 238, 0.1);
+    }
+
+    .form-floating-custom input::placeholder {
+      color: #a0afbe;
+      font-weight: 400;
+    }
+
+    .form-floating-custom .input-icon {
+      position: absolute;
+      left: 0.85rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #94a3b8;
+      font-size: 1rem;
+      pointer-events: none;
+      transition: color 0.2s;
+    }
+
+    .form-floating-custom input:focus ~ .input-icon {
+      color: #5a8dee;
+    }
+
+    /* Row helpers */
+    .form-row-options {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.2rem;
+      font-size: 0.85rem;
+    }
+
+    .form-check-custom {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      color: #475569;
+      cursor: pointer;
+    }
+
+    .form-check-custom input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      accent-color: #5a8dee;
+      cursor: pointer;
+    }
+
+    .forgot-link {
+      color: #5a8dee;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .forgot-link:hover {
+      text-decoration: underline;
+    }
+
+    /* Submit button */
+    .btn-submit {
+      width: 100%;
+      padding: 0.8rem;
+      border: none;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #5a8dee 0%, #3d6ed9 100%);
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      box-shadow: 0 4px 14px rgba(90, 141, 238, 0.3);
+    }
+
+    .btn-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(90, 141, 238, 0.4);
+    }
+
+    .btn-submit:active {
+      transform: translateY(0);
+    }
+
+    /* Error messages */
+    .alert-errors {
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      border-radius: 10px;
+      padding: 0.7rem 1rem;
+      margin-bottom: 1rem;
+      font-size: 0.85rem;
+      color: #b91c1c;
+    }
+
+    .alert-errors p { margin-bottom: 0; }
+
+    /* Field errors */
+    .field-error {
+      font-size: 0.75rem;
+      color: #dc2626;
+      margin-top: 0.25rem;
+      padding-left: 0.3rem;
+    }
+
+    /* Tab content */
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .auth-wrapper {
+        flex-direction: column;
+        max-width: 460px;
+      }
+      .auth-brand {
+        flex: unset;
+        padding: 2rem 1.5rem;
+      }
+      .auth-brand .brand-icon { font-size: 2.5rem; }
+      .auth-brand h2 { font-size: 1.4rem; }
+      .auth-form { padding: 2rem 1.5rem; }
     }
   </style>
 </head>
 
 <body>
-<div class="auth-card">
+<div class="auth-wrapper">
 
-  <!-- Pills navs -->
-  <ul class="nav nav-pills nav-justified mb-3" id="ex1" role="tablist">
-    <li class="nav-item" role="presentation">
-      <a class="nav-link active" id="tab-login" data-mdb-pill-init href="#pills-login"
-         role="tab" aria-controls="pills-login" aria-selected="true">Login</a>
-    </li>
-    <li class="nav-item" role="presentation">
-      <a class="nav-link" id="tab-register" href="{% url 'account_signup' %}">Register</a>
-    </li>
-  </ul>
+  <!-- LEFT: Brand Panel -->
+  <div class="auth-brand">
+    <div class="brand-icon">
+      <i class="fas fa-graduation-cap"></i>
+    </div>
+    <h2>PSUSphere</h2>
+    <p>Your centralized platform for student organizations, members, and academic records.</p>
+    <div class="brand-decoration"></div>
+  </div>
 
-  <!-- Pills content -->
-  <div class="tab-content">
+  <!-- RIGHT: Form Panel -->
+  <div class="auth-form">
 
-    <!-- LOGIN TAB -->
-    <div class="tab-pane fade show active" id="pills-login" role="tabpanel" aria-labelledby="tab-login">
+    <!-- Tabs -->
+    <div class="auth-tabs" role="tablist">
+      <button class="tab-btn active" id="tab-login-btn" data-tab="login">Sign In</button>
+      <button class="tab-btn" id="tab-register-btn" data-tab="register">Create Account</button>
+    </div>
+
+    <!-- ========== LOGIN TAB ========== -->
+    <div class="tab-panel active" id="panel-login">
+      <div class="form-header">
+        <h3>Welcome back</h3>
+        <p>Sign in to your PSUSphere account</p>
+      </div>
+
+      {% get_providers as socialaccount_providers %}
+      {% if socialaccount_providers %}
+      <div class="social-row">
+        {% for provider in socialaccount_providers %}
+          {% if provider.id == "google" %}
+            <a href="{% provider_login_url provider.id %}" class="social-btn" title="Google">
+              <i class="fab fa-google"></i> Google
+            </a>
+          {% elif provider.id == "github" %}
+            <a href="{% provider_login_url provider.id %}" class="social-btn" title="GitHub">
+              <i class="fab fa-github"></i> GitHub
+            </a>
+          {% endif %}
+        {% endfor %}
+      </div>
+      <div class="divider-text">or continue with email</div>
+      {% endif %}
+
       <form method="post" action="{% url 'account_login' %}">
         {% csrf_token %}
 
-        {# preserve ?next=/ behavior #}
         {% if redirect_field_value %}
           <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}">
         {% endif %}
 
-        {# Show social buttons ONLY if configured #}
-        {% get_providers as socialaccount_providers %}
-        {% if socialaccount_providers %}
-          <div class="text-center mb-3">
-            <p>Sign in with:</p>
-
-            {% for provider in socialaccount_providers %}
-              {% if provider.id == "google" %}
-                <a href="{% provider_login_url provider.id %}" class="btn btn-link btn-floating mx-1" title="Google">
-                  <i class="fab fa-google"></i>
-                </a>
-              {% elif provider.id == "github" %}
-                <a href="{% provider_login_url provider.id %}" class="btn btn-link btn-floating mx-1" title="GitHub">
-                  <i class="fab fa-github"></i>
-                </a>
-              {% endif %}
-            {% endfor %}
-          </div>
-          <p class="text-center">or:</p>
-        {% endif %}
-
-        <!-- Login (username/email) -->
-        <div data-mdb-input-init class="form-outline mb-4">
-          <input type="text" name="login" id="id_login" class="form-control" required />
-          <label class="form-label" for="id_login">Email or Username</label>
-        </div>
-
-        <!-- Password -->
-        <div data-mdb-input-init class="form-outline mb-4">
-          <input type="password" name="password" id="id_password" class="form-control" required />
-          <label class="form-label" for="id_password">Password</label>
-        </div>
-
-        <!-- Remember me / Forgot -->
-        <div class="row mb-4">
-          <div class="col-md-6 d-flex justify-content-center">
-            <div class="form-check mb-3 mb-md-0">
-              <input class="form-check-input" type="checkbox" name="remember" id="loginCheck" />
-              <label class="form-check-label" for="loginCheck"> Remember me </label>
-            </div>
-          </div>
-          <div class="col-md-6 d-flex justify-content-center">
-            <a href="{% url 'account_reset_password' %}">Forgot password?</a>
-          </div>
-        </div>
-
         {% if form.non_field_errors %}
-          <div class="alert alert-danger" role="alert">
+          <div class="alert-errors">
             {% for error in form.non_field_errors %}
-              <p{% if forloop.last %} class="mb-0"{% endif %}>{{ error }}</p>
+              <p>{{ error }}</p>
             {% endfor %}
           </div>
         {% endif %}
 
-        <button type="submit" class="btn btn-primary btn-block mb-4">Sign in</button>
+        <div class="form-floating-custom">
+          <i class="fas fa-user input-icon"></i>
+          <input type="text" name="login" id="id_login" placeholder="Email or Username" required />
+        </div>
+
+        <div class="form-floating-custom">
+          <i class="fas fa-lock input-icon"></i>
+          <input type="password" name="password" id="id_password" placeholder="Password" required />
+        </div>
+
+        <div class="form-row-options">
+          <label class="form-check-custom">
+            <input type="checkbox" name="remember" id="loginCheck" />
+            Remember me
+          </label>
+          <a href="{% url 'account_reset_password' %}" class="forgot-link">Forgot password?</a>
+        </div>
+
+        <button type="submit" class="btn-submit">Sign In</button>
       </form>
     </div>
 
-    <!-- REGISTER TAB -->
-    <div class="tab-pane fade" id="pills-register" role="tabpanel" aria-labelledby="tab-register">
+    <!-- ========== REGISTER TAB ========== -->
+    <div class="tab-panel" id="panel-register">
+      <div class="form-header">
+        <h3>Create account</h3>
+        <p>Join PSUSphere today</p>
+      </div>
+
+      {% get_providers as socialaccount_providers %}
+      {% if socialaccount_providers %}
+      <div class="social-row">
+        {% for provider in socialaccount_providers %}
+          {% if provider.id == "google" %}
+            <a href="{% provider_login_url provider.id %}" class="social-btn" title="Google">
+              <i class="fab fa-google"></i> Google
+            </a>
+          {% elif provider.id == "github" %}
+            <a href="{% provider_login_url provider.id %}" class="social-btn" title="GitHub">
+              <i class="fab fa-github"></i> GitHub
+            </a>
+          {% endif %}
+        {% endfor %}
+      </div>
+      <div class="divider-text">or register with email</div>
+      {% endif %}
+
       <form method="post" action="{% url 'account_signup' %}">
         {% csrf_token %}
 
-        {# preserve ?next=/ behavior #}
         {% if redirect_field_value %}
           <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}">
         {% endif %}
 
-        {# Show social buttons ONLY if configured #}
-        {% get_providers as socialaccount_providers %}
-        {% if socialaccount_providers %}
-          <div class="text-center mb-3">
-            <p>Sign up with:</p>
-
-            {% for provider in socialaccount_providers %}
-              {% if provider.id == "google" %}
-                <a href="{% provider_login_url provider.id %}" class="btn btn-link btn-floating mx-1" title="Google">
-                  <i class="fab fa-google"></i>
-                </a>
-              {% elif provider.id == "github" %}
-                <a href="{% provider_login_url provider.id %}" class="btn btn-link btn-floating mx-1" title="GitHub">
-                  <i class="fab fa-github"></i>
-                </a>
-              {% endif %}
-            {% endfor %}
-          </div>
-          <p class="text-center">or:</p>
-        {% endif %}
-
-        <!-- Username -->
-        <div data-mdb-input-init class="form-outline mb-4">
-          <input type="text" name="username" id="registerUsername" class="form-control" required />
-          <label class="form-label" for="registerUsername">Username</label>
-        </div>
-
-        <!-- Email -->
-        <div data-mdb-input-init class="form-outline mb-4">
-          <input type="email" name="email" id="registerEmail" class="form-control" required />
-          <label class="form-label" for="registerEmail">Email</label>
-        </div>
-
-        <!-- Password -->
-        <div data-mdb-input-init class="form-outline mb-4">
-          <input type="password" name="password1" id="registerPassword" class="form-control" required />
-          <label class="form-label" for="registerPassword">Password</label>
-        </div>
-
-        <!-- Confirm Password -->
-        <div data-mdb-input-init class="form-outline mb-4">
-          <input type="password" name="password2" id="registerRepeatPassword" class="form-control" required />
-          <label class="form-label" for="registerRepeatPassword">Repeat password</label>
-        </div>
-
         {% if form.non_field_errors %}
-          <div class="alert alert-danger" role="alert">
+          <div class="alert-errors">
             {% for error in form.non_field_errors %}
-              <p{% if forloop.last %} class="mb-0"{% endif %}>{{ error }}</p>
+              <p>{{ error }}</p>
             {% endfor %}
           </div>
         {% endif %}
 
-        <button type="submit" class="btn btn-primary btn-block mb-3">Register</button>
+        <div class="form-floating-custom">
+          <i class="fas fa-user input-icon"></i>
+          <input type="text" name="username" id="registerUsername" placeholder="Username" required />
+        </div>
+
+        <div class="form-floating-custom">
+          <i class="fas fa-envelope input-icon"></i>
+          <input type="email" name="email" id="registerEmail" placeholder="Email address" required />
+        </div>
+
+        <div class="form-floating-custom">
+          <i class="fas fa-lock input-icon"></i>
+          <input type="password" name="password1" id="registerPassword" placeholder="Password" required />
+        </div>
+
+        <div class="form-floating-custom">
+          <i class="fas fa-check-circle input-icon"></i>
+          <input type="password" name="password2" id="registerRepeatPassword" placeholder="Repeat password" required />
+        </div>
+
+        <button type="submit" class="btn-submit">Create Account</button>
       </form>
     </div>
 
   </div>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.2/mdb.min.js"></script>
+<script>
+  // Tab switching
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      this.classList.add('active');
+      document.getElementById('panel-' + this.dataset.tab).classList.add('active');
+    });
+  });
+
+  // If there are form errors in register tab, switch to it
+  {% if form.errors %}
+    {% for field, errors in form.errors.items %}
+      {% if field in "username,email,password1,password2" %}
+        document.getElementById('tab-register-btn').click();
+      {% endif %}
+    {% endfor %}
+  {% endif %}
+</script>
 </body>
 </html>

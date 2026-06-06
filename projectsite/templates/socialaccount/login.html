@@ -5,36 +5,119 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-  <title>Confirm Social Login</title>
+  <title>Confirm Login | PSUSphere</title>
 
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.2/mdb.min.css" />
+  <link rel="shortcut icon" href="{% static 'images/favicon.png' %}" type="image/png">
 
   <style>
+    * { font-family: 'Raleway', sans-serif; }
+
     body {
       display: flex;
       align-items: center;
       justify-content: center;
-      height: 100vh;
-      background-color: #f8f9fc;
+      min-height: 100vh;
+      margin: 0;
+      background: linear-gradient(135deg, #f7faff 0%, #e8f0fe 100%);
+      padding: 1rem;
     }
+
     .auth-card {
-      max-width: 500px;
+      max-width: 440px;
       width: 100%;
       background: #fff;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      padding: 2rem;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(90, 141, 238, 0.15), 0 8px 20px rgba(0, 0, 0, 0.06);
+      padding: 2.5rem 2rem;
       text-align: center;
+      animation: fadeIn 0.5s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .provider-icon {
+      font-size: 3rem;
+      color: #5a8dee;
+      margin-bottom: 1rem;
+    }
+
+    h3 {
+      font-weight: 700;
+      color: #2c3e50;
+      margin-bottom: 0.5rem;
+    }
+
+    p {
+      color: #7f8c9b;
+      font-size: 0.95rem;
+      margin-bottom: 1.5rem;
+      line-height: 1.6;
+    }
+
+    p strong {
+      color: #5a8dee;
+    }
+
+    .btn-continue {
+      width: 100%;
+      padding: 0.8rem;
+      border: none;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #5a8dee 0%, #3d6ed9 100%);
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      box-shadow: 0 4px 14px rgba(90, 141, 238, 0.3);
+      margin-bottom: 0.75rem;
+    }
+
+    .btn-continue:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(90, 141, 238, 0.4);
+    }
+
+    .btn-cancel {
+      display: block;
+      width: 100%;
+      padding: 0.75rem;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 10px;
+      background: #fff;
+      color: #475569;
+      font-weight: 600;
+      font-size: 0.9rem;
+      text-decoration: none;
+      text-align: center;
+      transition: all 0.2s ease;
+      box-sizing: border-box;
+    }
+
+    .btn-cancel:hover {
+      border-color: #5a8dee;
+      color: #5a8dee;
+      background: #f8faff;
     }
   </style>
 </head>
 
 <body>
 <div class="auth-card">
-  <h3 class="mb-4">Confirm Sign In</h3>
-  <p class="mb-3">
+  <div class="provider-icon">
+    <i class="fas fa-shield-alt"></i>
+  </div>
+
+  <h3>Confirm Sign In</h3>
+  <p>
     You are about to sign in using your <strong>{{ provider.name }}</strong> account.
   </p>
 
@@ -43,12 +126,12 @@
     {% if redirect_field_value %}
       <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}">
     {% endif %}
-    <button type="submit" class="btn btn-primary btn-block mb-3">
+    <button type="submit" class="btn-continue">
       Continue with {{ provider.name }}
     </button>
   </form>
 
-  <a href="{% url 'account_login' %}" class="btn btn-outline-secondary btn-block">Cancel</a>
+  <a href="{% url 'account_login' %}" class="btn-cancel">Cancel</a>
 </div>
 </body>
 </html>

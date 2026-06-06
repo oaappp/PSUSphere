@@ -29,8 +29,14 @@ INSTALLED_APPS = [
     "allauth.socialaccount.providers.github",
 ]
 
-# Matches your local site (127.0.0.1:8000 which has ID = 1 in your admin)
-SITE_ID = 1
+import os
+import socket
+
+# Dynamic SITE_ID: production vs local
+if "pythonanywhere" in socket.gethostname():
+    SITE_ID = 2  # production site (psusphere.pythonanywhere.com)
+else:
+    SITE_ID = 1  # local site (127.0.0.1:8000)
 
 AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",
@@ -109,5 +115,9 @@ ACCOUNT_SIGNUP_FIELDS = [
     "password1*",
     "password2*",
 ]
+
+# Social account settings
+SOCIALACCOUNT_LOGIN_ON_GET = True
+SOCIALACCOUNT_EMAIL_AUTHENTICATION = True
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
