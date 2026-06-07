@@ -33,8 +33,8 @@ import os
 import socket
 
 # Dynamic SITE_ID: production vs local
-if "pythonanywhere" in socket.gethostname():
-    SITE_ID = 2  # production site (psusphere.pythonanywhere.com)
+if "pythonanywhere" in socket.gethostname() or "oaappp" in socket.gethostname():
+    SITE_ID = 2  # production site (oaappp.pythonanywhere.com)
 else:
     SITE_ID = 1  # local site (127.0.0.1:8000)
 
